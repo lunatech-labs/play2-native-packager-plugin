@@ -13,8 +13,8 @@ object NatPackPlugin extends Plugin with debian.DebianPlugin {
     lazy val debianPreInst = TaskKey[File]("debian-preinst-file", "Debian pre install maintainer script")
     lazy val debianPreRm   = TaskKey[File]("debian-prerm-file", "Debian pre remove maintainer script")
     lazy val debianPostRm  = TaskKey[File]("debian-postrm-file", "Debian post remove maintainer script")
-    lazy val userName     = SettingKey[String]("Unix user to own the extracted package files")
-    lazy val groupName     = SettingKey[String]("Unix group to own the extracted package files")
+    lazy val userName     = SettingKey[String]("user-name","Unix user to own the extracted package files")
+    lazy val groupName     = SettingKey[String]("group-name","Unix group to own the extracted package files")
   }
   private val npkg = NatPackKeys
 
@@ -36,7 +36,7 @@ object NatPackPlugin extends Plugin with debian.DebianPlugin {
         IO.write(init, initFilecontent(name, desc))
 
         pkgs.map { pkg ⇒
-          packageMapping(pkg -> format("/var/lib/%s/%s", name, pkg.getName)) withUser(usr) withGroup(grp)
+          packageMapping(pkg -> format("/var/lib/%s/lib/%s", name, pkg.getName)) withUser(usr) withGroup(grp)
         } ++
         deps.filter(_.data.ext == "jar").map { dependency ⇒
           val depFilename = dependency.metadata.get(AttributeKey[ModuleID]("module-id")).map { module ⇒
