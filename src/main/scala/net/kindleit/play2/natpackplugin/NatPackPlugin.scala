@@ -46,6 +46,9 @@ object NatPackPlugin extends Plugin with debian.DebianPlugin {
         } ++
         (config map { cfg ⇒
           packageMapping(root / cfg -> format("/var/lib/%s/application.conf", name)) withUser(usr) withGroup(grp) withPerms("0644")
+        }) ++
+        (logConfig map { cfg ⇒
+          packageMapping(root / cfg -> format("/var/lib/%s/logger.xml", name)) withUser(usr) withGroup(grp) withPerms("0644")
         }) ++ Seq(
           packageMapping(start -> format("/var/lib/%s/start", name)) withUser(usr) withGroup(grp),
           packageMapping(init -> format("/etc/init.d/%s/", name)) withConfig(),

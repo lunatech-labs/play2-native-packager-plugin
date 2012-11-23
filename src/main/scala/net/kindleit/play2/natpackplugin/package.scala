@@ -6,6 +6,7 @@ package object natpackplugin {
   import sbt._
 
   private[natpackplugin] val config = Option(System.getProperty("config.file"))
+  private[natpackplugin] val logConfig = Option(System.getProperty("logger.file"))
 
   private[natpackplugin] def postInstContent(name: String) = format(
 """#!/bin/sh
@@ -107,8 +108,9 @@ fi
   private[natpackplugin] def startFileContent = format(
 """#!/usr/bin/env sh
 
-exec java $* -cp "`dirname $0`/lib/*" %s play.core.server.NettyServer `dirname $0` $@
-""", config.map(_ ⇒ "-Dconfig.file=`dirname $0`/application.conf ").getOrElse(""))
+exec java $* -cp "`dirname $0`/lib/*" %s %s play.core.server.NettyServer `dirname $0` $@
+""", config.map(_ ⇒ "-Dconfig.file=`dirname $0`/application.conf ").getOrElse(""),
+  logConfig.map(_ => "-Dlogger.file=`dirname $0`/logger.xml ").getOrElse(""))
 
   // /etc/init.d init script
   private[natpackplugin] def initFilecontent(id: String, desc: String) = format(
