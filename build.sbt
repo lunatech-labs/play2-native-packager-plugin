@@ -1,18 +1,12 @@
-resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
-
-resolvers += Resolver.url("scalasbt", new URL("http://scalasbt.artifactoryonline.com/scalasbt/sbt-plugin-releases"))(Resolver.ivyStylePatterns)
-
-resolvers += Resolver.file("ivy2-local", new File(Path.userHome.absolutePath + "/.ivy2/local"))(Resolver.ivyStylePatterns)
-
 addSbtPlugin("com.typesafe" % "sbt-native-packager" % "0.4.3" withSources )
 
 addSbtPlugin("play" % "sbt-plugin" % "2.0.4")
 
 name := "play2-native-packager-plugin"
 
-organization := "net.kindleit"
+organization := "com.lunatech"
 
-version := "0.2-SNAPSHOT"
+version := "0.2"
 
 description := "Play2 plugin for producing native system distribution packages"
 
@@ -24,12 +18,8 @@ sbtPlugin := true
 
 publishMavenStyle := true
 
-publishArtifact in Test := false
-
-pomIncludeRepository := { x => false }
-
 pomExtra := (
-  <url>https://github.com/kryptt/play2-native-packager-plugin</url>
+  <url>https://github.com/lunatech-labs/play2-native-packager-plugin</url>
   <licenses>
   <license>
     <name>Apache 2</name>
@@ -37,24 +27,15 @@ pomExtra := (
     <distribution>repo</distribution>
   </license>
   </licenses>
-    <scm>
-    <url>git@github.com:kryptt/play2-native-packager-plugin.git</url>
-    <connection>scm:git:git@github.com:kryptt/play2-native-packager-plugin.git</connection>
+  <scm>
+    <url>git@github.com:lunatech-labs/play2-native-packager-plugin.git</url>
+    <connection>scm:git:git@github.com:lunatech-labs/play2-native-packager-plugin.git</connection>
   </scm>
-  <developers>
-    <developer>
-      <id>kryptt</id>
-      <name>Rodolfo Hansen</name>
-      <url>http://hobbes-log.blogspot.com</url>
-    </developer>
-  </developers>
 )
 
 publishTo <<= version { (v) =>
   if (v.trim.endsWith("SNAPSHOT"))
-    Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots/")
+    Some("snapshots" at "http://artifactory.lunatech.com/artifactory/snapshots-public")
   else
-    Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2/")
+    Some("releases" at "http://artifactory.lunatech.com/artifactory/releases-public")
 }
-
-credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
